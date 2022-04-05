@@ -33,7 +33,7 @@ function App() {
   const [winners, setWinners] = useState([]);
   const [currentDraw, setCurrentDraw] = useState(0);
   const [chanceOfWinning, setChanceOfWinning] = useState(0);
-  const contractAddress = "0x5579124bACf71717F4a47Aa3888a0bC41958E260";
+  const contractAddress = "0x77509629Ab74F22385655909E5916fDaE0Aa33bD";
   const ticketPrice = 0.0001;
   const owner = "0x6b0a64533bae0cebee34c7e614b4cc456937d572";
 
@@ -159,10 +159,7 @@ function App() {
         );
 
         setCurrentDraw(await lotteryContract.currentDraw());
-        for (let i = currentDraw - 1; i >= 0; i--) {
-          setWinners(await lotteryContract.winners(i));
-        }
-        console.log(winners);
+        setWinners(await lotteryContract.getWinners());
       }
     } catch (error) {
       console.log(error);
@@ -282,7 +279,7 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="py-12 bg-white sm:py-16">
+        {!!winners.length && <div className="py-12 bg-white sm:py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-xl mx-auto">
               <div className="rounded-lg bg-white shadow-lg">
@@ -299,7 +296,7 @@ function App() {
               </div>
             </div>
           </div>
-        </div>
+        </div>}
         <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:py-20 lg:px-8">
           <div className="lg:grid lg:grid-cols-3 lg:gap-8">
             <div>

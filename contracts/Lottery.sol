@@ -11,6 +11,15 @@ contract Lottery is VRFv2Consumer {
     mapping(uint256 => mapping(address => uint256))
         private drawAttendeeTicketsCount;
 
+    struct Winner {
+        address addr;
+        uint amount;
+        uint32 draw;
+        uint32 timestamp;
+    }
+
+    Winner[] public winners;
+
     event TicketsBought(address buyer, uint256 amount);
     event WinnerElected(address winner, uint256 earnedAmount);
 
@@ -24,6 +33,10 @@ contract Lottery is VRFv2Consumer {
     function setOwnerFeePercentage(uint256 fee) external onlyOwner {
         require(fee >= 0 && fee < 100);
         ownerFeePercentage = fee;
+    }
+
+    function getWinners() public view returns (Winner[] memory) {
+        return winners;
     }
 
     function buyTickets(uint256 amount) external payable {
@@ -60,6 +73,9 @@ contract Lottery is VRFv2Consumer {
         require(success);
 
         emit WinnerElected(winner, amount);
+        winners.push(
+            Winner(winner, amount, currentDraw, uint32(block.timestamp))
+        );
         currentDraw += 1;
     }
 

@@ -5,7 +5,7 @@ import moment from "moment";
 
 function shortenAddress(address) {
   return (
-    address.substring(0, 4) + "..." + address.substring(address.length - 4)
+    address.substring(0, 6) + "..." + address.substring(address.length - 4)
   );
 }
 
@@ -45,9 +45,9 @@ export default function Feed({ winners }) {
                 <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
                   <div>
                     <p className="text-sm text-gray-500">
-                      {linkToEtherscan(winner.address)} won{" "}
+                      {linkToEtherscan(winner.addr)} won{" "}
                       <span className="font-bold text-indigo-500">
-                        {ethers.utils.formatEther(winner.amount)}
+                        {ethers.utils.formatEther(winner.amount.toNumber())}
                       </span>{" "}
                       ether
                     </p>
