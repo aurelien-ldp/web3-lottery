@@ -32,6 +32,7 @@ function App() {
   const [totalValue, setTotalValue] = useState(0);
   const [winners, setWinners] = useState([]);
   const [currentDraw, setCurrentDraw] = useState(0);
+  const [chanceOfWinning, setChanceOfWinning] = useState(0);
   const contractAddress = "0x5579124bACf71717F4a47Aa3888a0bC41958E260";
   const ticketPrice = 0.0001;
   const owner = "0x6b0a64533bae0cebee34c7e614b4cc456937d572";
@@ -177,6 +178,13 @@ function App() {
     getTicketsCount();
   }, [currentAccount]);
 
+  useEffect(() => {
+    setChanceOfWinning(
+      (ticketsCount / (+ethers.utils.formatEther(totalValue) / ticketPrice)) *
+        100 || 0
+    );
+  }, [ticketsCount, ticketPrice, totalValue]);
+
   return (
     <main>
       <div className="bg-gray-50">
@@ -188,6 +196,13 @@ function App() {
             Buy a ticket for{" "}
             <span className="text-indigo-600 font-bold">0.0001</span> ether.
           </p>
+          {currentAccount && (
+            <div className="flex justify-center">
+              <p className="mt-4 text-gray-500">
+                Connected as {currentAccount}
+              </p>
+            </div>
+          )}
           <div className="mt-8 flex justify-center">
             {currentAccount && (
               <div className="inline-flex rounded-md shadow">
@@ -224,7 +239,7 @@ function App() {
       </div>
       <div className="pb-12 bg-white sm:pb-16">
         <div className="relative">
-          <div className="absolute inset-0 h-1/2 bg-gray-50" />
+          <div className="absolute inset-0 h-1/3 bg-gray-50" />
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
               <dl className="rounded-lg bg-white shadow-lg sm:grid sm:grid-cols-3">
@@ -259,10 +274,7 @@ function App() {
                 <p className="mt-4 text-lg leading-6 text-gray-500">
                   ~
                   <span className="text-indigo-600 font-bold">
-                    {((ticketsCount /
-                      (+ethers.utils.formatEther(totalValue) / ticketPrice)) *
-                      100).toFixed(1) || 0}
-                    %
+                    {chanceOfWinning.toFixed(1) || 0}%
                   </span>{" "}
                   chance of winning.
                 </p>
